@@ -1,2 +1,3 @@
-# wp-aff
-Amazon Affiliate plugin for WordPress
+# [ WP AFF ] Amazon Affiliates International
+
+Amazon Affiliate plugin for WordPress.
