@@ -18,12 +18,12 @@
  * @internal    never define functions inside callbacks.
  *              these functions could be run multiple times; this would result in a fatal error.
  */
- 
+
 /**
  * custom option and settings
  */
 function affint_settings_init() {
- 
+
   // register a new section in the "affint" page
   add_settings_section(
     'affint_section_afftags',
@@ -31,7 +31,7 @@ function affint_settings_init() {
     'affint_section_afftags_cb',
     'affint'
   );
- 
+
   add_settings_field(
     'affint_slug',
     __('Outbound URL Slug', 'affint'),
@@ -58,7 +58,7 @@ function affint_settings_init() {
   );
   add_settings_field(
     'affint_afftag_ca',
-    __('Amazon CA', 'affint'),
+    __('Amazon Canada (CA)', 'affint'),
     'affint_afftag_cb',
     'affint',
     'affint_section_afftags',
@@ -70,7 +70,7 @@ function affint_settings_init() {
   );
   add_settings_field(
     'affint_afftag_de',
-    __('Amazon DE', 'affint'),
+    __('Amazon Germany (DE)', 'affint'),
     'affint_afftag_cb',
     'affint',
     'affint_section_afftags',
@@ -82,7 +82,7 @@ function affint_settings_init() {
   );
   add_settings_field(
     'affint_afftag_fr',
-    __('Amazon FR', 'affint'),
+    __('Amazon France (FR)', 'affint'),
     'affint_afftag_cb',
     'affint',
     'affint_section_afftags',
@@ -94,7 +94,7 @@ function affint_settings_init() {
   );
   add_settings_field(
     'affint_afftag_in',
-    __('Amazon IN', 'affint'),
+    __('Amazon India (IN)', 'affint'),
     'affint_afftag_cb',
     'affint',
     'affint_section_afftags',
@@ -106,7 +106,7 @@ function affint_settings_init() {
   );
   add_settings_field(
     'affint_afftag_jp',
-    __('Amazon JP', 'affint'),
+    __('Amazon Japan (JP)', 'affint'),
     'affint_afftag_cb',
     'affint',
     'affint_section_afftags',
@@ -118,7 +118,7 @@ function affint_settings_init() {
   );
   add_settings_field(
     'affint_afftag_uk',
-    __('Amazon UK', 'affint'),
+    __('Amazon United Kingdom (UK)', 'affint'),
     'affint_afftag_cb',
     'affint',
     'affint_section_afftags',
@@ -145,39 +145,39 @@ function affint_settings_init() {
   register_setting('affint', 'affint_slug');
   register_setting('affint', 'affint_afftag');
   register_setting('affint', 'affint_afftag_ca');
-  register_setting('affint', 'affint_afftag_uk');
   register_setting('affint', 'affint_afftag_de');
   register_setting('affint', 'affint_afftag_fr');
-  register_setting('affint', 'affint_afftag_jp');
   register_setting('affint', 'affint_afftag_in');
+  register_setting('affint', 'affint_afftag_jp');
+  register_setting('affint', 'affint_afftag_uk');
   register_setting('affint', 'affint_user_cookie_expiry');
 
 }
- 
 
- 
+
+
 /**
  * custom option and settings:
  * callback functions
  */
- 
+
 // developers section cb
- 
+
 // section callbacks can accept an $args parameter, which is an array.
 // $args have the following keys defined: title, id, callback.
 // the values are defined at the add_settings_section() function.
 function affint_section_afftags_cb($args)
-{ 
+{
   ?>
   <p id="<?= esc_attr($args['id']); ?>">
-    <?= esc_html__('Follow the white rabbit.', 'affint'); ?>
+    <?= esc_html__("Paste in your Amazon Affiliate ID for each locale, and click 'Update Settings'. Any locales left blank will forward to Amazon.com with your affiliate ID attached.", 'affint'); ?>
   </p>
   <?php
-  
+
 }
- 
+
 // pill field cb
- 
+
 // field callbacks can accept an $args parameter, which is an array.
 // $args is defined at the add_settings_field() function.
 // wordpress has magic interaction with the following keys: label_for, class.
@@ -192,11 +192,11 @@ function affint_afftag_cb($args) {
   ?>
   <input type="text" name="<?= $affint_label ?>" value="<?= $affint_value; ?>" />
   <p class="description">
-    <?= esc_html('You take the blue pill and the story ends.', 'affint'); ?>
+    <?= esc_html('Paste or type your Amazon Affiliate ID for this locale.', 'affint'); ?>
   </p>
   <?php
 }
- 
+
 /**
  * top level menu
  */
@@ -204,15 +204,15 @@ function affint_options_page()
 {
   // add top level menu page
   add_options_page(
-    'Affiliates International',
-    'Affiliate Options',
+    'WP AFF',
+    'Amazon Affiliates (International)',
     'manage_options',
     'affint',
     'affint_options_page_html'
   );
 }
 
- 
+
 /**
  * top level menu:
  * callback functions
@@ -222,16 +222,16 @@ function affint_options_page_html() {
   if (!current_user_can('manage_options')) {
     return;
   }
- 
+
   // add error/update messages
- 
+
   // check if the user have submitted the settings
   // wordpress will add the "settings-updated" $_GET parameter to the url
   // if (isset($_GET['settings-updated'])) {
     // add settings saved message with the class of "updated"
     // add_settings_error('affint_messages', 'affint_message', __('Settings Saved', 'affint'), 'updated');
   // }
- 
+
   // show error/update messages
   settings_errors('affint_messages');
   ?>
@@ -247,7 +247,7 @@ function affint_options_page_html() {
       do_settings_sections('affint');
 
       // output save settings button
-      submit_button('Save Settings');
+      submit_button('Update Settings');
       ?>
     </form>
   </div>
