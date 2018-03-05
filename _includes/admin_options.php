@@ -192,12 +192,8 @@ function affint_afftag_cb($args) {
   $affint_value = get_option( $affint_label );
   ?>
   <input type="text" name="<?= $affint_label ?>" value="<?= $affint_value; ?>" />
-  <?php
-  // echo $affint_label;
-  // var_dump( $args );
-  ?>
   <p class="description">
-    <?= $args['affint_field_description'] ?>
+    <?= $args['affint_field_description']; ?>
   </p>
   <?php
 }

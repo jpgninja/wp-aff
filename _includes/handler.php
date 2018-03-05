@@ -113,7 +113,7 @@ $expires = get_option('affint_user_cookie_expiry');
 if (DEBUG == true) {
 	echo 'Affiliate ID: '.$affiliate_id.'<br>';
 	echo 'Visitor Country: '.$visitor_country.'<br>';
-	echo 'Cookie set to expire: '.$expires.'<br>';
+	echo 'Cookie set to expire in '.$expires.' days.<br>';
 	echo '<br>';
 }
 
