@@ -1,7 +1,7 @@
 <?php
 global $wp;
 
-define('DEBUG', false);
+define('DEBUG', true);
 // Test ASIN: B002RPCOH8
 
 // Instantiate vars
@@ -11,16 +11,12 @@ $visitor_is_cached = !empty( $_COOKIE['affint_location'] );
 $visitor = array();
 $visitor_country = '';
 
-// @TODO: Check for geolocation cookie
-
-
 if ($visitor_is_cached == true) {
 	$visitor_country = substr( $_COOKIE['affint_location'], 0, 2 );
 
 	if (DEBUG == true) {
-		echo 'Got cached user data from cookie:<br>';
-		echo 'Country Code: '. $visitor_country;
-		echo '<br>';
+		echo 'Got cached user data from cookie...<br>';
+		echo 'Country Code: '. $visitor_country . '<br>';
 	}
 } else {
 	//Get IP
@@ -32,17 +28,23 @@ if ($visitor_is_cached == true) {
 	  $ip = $_SERVER['REMOTE_ADDR'];
 	}
 
+  // if (DEBUG == 'true') {
+  //   $ip = '70.81.0.212';
+  // }
+
+  // You know what they say about cleanliness
+  $ip = filter_var($ip, FILTER_VALIDATE_IP);
+
 	// Get Visitor Object
 	$visitor = unserialize(file_get_contents('http://www.geoplugin.net/php.gp?ip='.$ip));
-	$visitor_country = $visitor['geoplugin_countryCode'];
-	
+  $have_country = ( ( $visitor['geoplugin_countryCode'] !== '' ) || ( !isset( $visitor['geoplugin_countryCode'] ) ) );
+	$visitor_country = ( $have_country ) ? $visitor['geoplugin_countryCode'] : 'US';
+
 	if (DEBUG == true) {
 		echo 'Got user data from our Geo Plugin:<br>';
 		var_dump($visitor);
 		echo '<br><br>';
-		echo 'Country Code: ';
-		echo $visitor['geoplugin_countryCode'];
-		echo '<br>';
+		echo 'Country Code: ' . $visitor_country . '<br>';
 	}
 }
 
@@ -53,7 +55,7 @@ if ($visitor_is_cached == true) {
  *
  */
 switch($visitor_country) {
-	case 'US':
+  case 'US':
 		$domain = 'amazon.com';
 		$affiliate_id = get_option('affint_afftag');
 		break;
@@ -82,9 +84,19 @@ switch($visitor_country) {
 		$domain = 'amazon.co.uk';
 		$affiliate_id = get_option('affint_afftag_uk');
 		break;
+  default:
+    // Default
+    if (DEBUG == true) {
+      echo '<strong>Something went wrong.</strong><br>';
+      echo 'Using default USA affiliate ID...<br>';
+    }
+
+    $domain = 'amazon.com';
+    $affiliate_id = get_option('affint_afftag');
+    break;
 }
 
-/** 
+/**
  * Override affiliate tag
  */
 if (isset($wp->query_vars['aff_id'])){
@@ -92,22 +104,31 @@ if (isset($wp->query_vars['aff_id'])){
 	$affiliate_id = $wp->query_vars['aff_id'];
 
 	if (DEBUG == true) {
-		echo 'Forcing ';
+		echo 'Forcing to USA with ID';
 	}
 }
 
+$expires = get_option('affint_user_cookie_expiry');
+
 if (DEBUG == true) {
-	echo 'Affiliate ID: '.$affiliate_id;
+	echo 'Affiliate ID: '.$affiliate_id.'<br>';
+	echo 'Visitor Country: '.$visitor_country.'<br>';
+	echo 'Cookie set to expire: '.$expires.'<br>';
 	echo '<br>';
 }
 
-// @TODO: Set cookie to reduce fetching
-setcookie("affint_location", $visitor_country, time() + ( get_option('affint_user_cookie_expiry') * 86400 ));  /* expire in 1 hour */
+// Clean up data
+$domain = preg_replace('~[^a-z.]+~', '', $domain);
+$asin = preg_replace('~[^A-Z0-9]+~', '', $wp->query_vars['asin']);
+$affiliate_id = preg_replace('~[^a-zA-Z0-9-]+~', '', $affiliate_id);
+
+// Set the cookie
+setcookie("affint_location", $visitor_country, time() + ( $expires * 86400 ), '/');  /* expire in 1 hour */
 
 // We're all set! Let's manipulate url string and redirect...
 $affiliate_url = "http://_DOMAIN_/gp/product/_ASIN_/?tag=_TAG_ID_";
 $affiliate_url = str_replace('_DOMAIN_', $domain, $affiliate_url);
-$affiliate_url = str_replace('_ASIN_', $wp->query_vars['asin'], $affiliate_url);
+$affiliate_url = str_replace('_ASIN_', $asin, $affiliate_url);
 $affiliate_url = str_replace('_TAG_ID_', $affiliate_id, $affiliate_url);
 
 
@@ -118,8 +139,10 @@ $affiliate_url = str_replace('_TAG_ID_', $affiliate_id, $affiliate_url);
 if (DEBUG == false) {
 	header("Location: $affiliate_url");
 } else {
-	echo 'Affiliate URL: '.$affiliate_url;
+	echo 'Affiliate URL: ' . $affiliate_url . '<br>';
+  echo 'Cookie is set to: ' . $_COOKIE['affint_location'] . '<br>';
 	echo '<br><br>';
 }
+
 
 exit();

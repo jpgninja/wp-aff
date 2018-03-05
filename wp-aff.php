@@ -31,8 +31,8 @@ class WP_Aff_International {
 
     // @TODO Make this dynamic.
     // @TODO When this changes, we must resave permalinks
-    // $this->url_slug = get_option('affint_slug');
-    $this->url_slug = 'am';
+    $this->url_slug = get_option('affint_slug');
+    // $this->url_slug = 'am';
 
     register_activation_hook( __FILE__, array( $this, 'flush' ) );
     add_action( 'init', array( $this, 'init') );

@@ -27,7 +27,7 @@ function affint_settings_init() {
   // register a new section in the "affint" page
   add_settings_section(
     'affint_section_afftags',
-    __('The Matrix has you.', 'affint'),
+    __('Smart Amazon Affiliate links for international visitors.', 'affint'),
     'affint_section_afftags_cb',
     'affint'
   );
@@ -41,7 +41,7 @@ function affint_settings_init() {
     [
       'label_for'         => 'affint_slug',
       'class'             => 'affint_row',
-      'affint_custom_data' => '',
+      'affint_field_description' => __( 'Your outgoing slug <em>(ie. http://yourdomain.com/<code>OUTGOING SLUG</code>/ASIN)', 'affint'),
     ]
   );
   add_settings_field(
@@ -53,7 +53,7 @@ function affint_settings_init() {
     [
       'label_for'         => 'affint_afftag',
       'class'             => 'affint_row',
-      'affint_custom_data' => '',
+      'affint_field_description' => 'Paste or type your <strong>United States</strong> Amazon Affiliate ID.',
     ]
   );
   add_settings_field(
@@ -65,7 +65,7 @@ function affint_settings_init() {
     [
       'label_for'         => 'affint_afftag_ca',
       'class'             => 'affint_row',
-      'affint_custom_data' => '',
+      'affint_field_description' => 'Paste or type your <strong>Canadian</strong> Amazon Affiliate ID.',
     ]
   );
   add_settings_field(
@@ -77,7 +77,7 @@ function affint_settings_init() {
     [
       'label_for'         => 'affint_afftag_de',
       'class'             => 'affint_row',
-      'affint_custom_data' => '',
+      'affint_field_description' => 'Paste or type your <strong>German</strong> Amazon Affiliate ID.',
     ]
   );
   add_settings_field(
@@ -89,7 +89,7 @@ function affint_settings_init() {
     [
       'label_for'         => 'affint_afftag_fr',
       'class'             => 'affint_row',
-      'affint_custom_data' => '',
+      'affint_field_description' => 'Paste or type your <strong>France</strong> Amazon Affiliate ID.',
     ]
   );
   add_settings_field(
@@ -101,7 +101,7 @@ function affint_settings_init() {
     [
       'label_for'         => 'affint_afftag_in',
       'class'             => 'affint_row',
-      'affint_custom_data' => '',
+      'affint_field_description' => 'Paste or type your <strong>India</strong> Amazon Affiliate ID.',
     ]
   );
   add_settings_field(
@@ -113,7 +113,7 @@ function affint_settings_init() {
     [
       'label_for'         => 'affint_afftag_jp',
       'class'             => 'affint_row',
-      'affint_custom_data' => '',
+      'affint_field_description' => 'Paste or type your <strong>Japan</strong> Amazon Affiliate ID.',
     ]
   );
   add_settings_field(
@@ -125,7 +125,7 @@ function affint_settings_init() {
     [
       'label_for'         => 'affint_afftag_uk',
       'class'             => 'affint_row',
-      'affint_custom_data' => '',
+      'affint_field_description' => 'Paste or type your <strong>United Kingdom</strong> Amazon Affiliate ID.',
     ]
   );
   add_settings_field(
@@ -137,7 +137,7 @@ function affint_settings_init() {
     [
       'label_for'         => 'affint_user_cookie_expiry',
       'class'             => 'affint_row',
-      'affint_custom_data' => '',
+      'affint_field_description' => 'How long should we store their location? <small>(This is to save your servers bandwidth!)</small>',
     ]
   );
 
@@ -152,6 +152,7 @@ function affint_settings_init() {
   register_setting('affint', 'affint_afftag_uk');
   register_setting('affint', 'affint_user_cookie_expiry');
 
+  // $wpa8185_WP_Aff_International->flush();
 }
 
 
@@ -186,13 +187,17 @@ function affint_section_afftags_cb($args)
 // you can add custom key value pairs to be used inside your callbacks.
 function affint_afftag_cb($args) {
   // get the value of the setting we've registered with register_setting()
-  $options = get_option('affint_options');
+  // $options = get_option('affint_options');
   $affint_label = esc_attr($args['label_for']);
   $affint_value = get_option( $affint_label );
   ?>
   <input type="text" name="<?= $affint_label ?>" value="<?= $affint_value; ?>" />
+  <?php
+  // echo $affint_label;
+  // var_dump( $args );
+  ?>
   <p class="description">
-    <?= esc_html('Paste or type your Amazon Affiliate ID for this locale.', 'affint'); ?>
+    <?= $args['affint_field_description'] ?>
   </p>
   <?php
 }
@@ -204,7 +209,7 @@ function affint_options_page()
 {
   // add top level menu page
   add_options_page(
-    'WP AFF',
+    'Amazon Affiliates International Plugin For WordPress',
     'Amazon Affiliates (International)',
     'manage_options',
     'affint',
