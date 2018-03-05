@@ -34,14 +34,14 @@ function affint_settings_init() {
 
   add_settings_field(
     'affint_slug',
-    __('Outbound URL Slug', 'affint'),
+    __('Outbound Slug', 'affint'),
     'affint_afftag_cb',
     'affint', // Page
     'affint_section_afftags', // Section of page
     [
       'label_for'         => 'affint_slug',
       'class'             => 'affint_row',
-      'affint_field_description' => __( 'Your outgoing slug <em>(ie. http://yourdomain.com/<code>OUTGOING SLUG</code>/ASIN)', 'affint'),
+      'affint_field_description' => __( "The outgoing URL slug <small>(ie. http://yourdomain.com/<code>OUTGOING SLUG</code>/ASIN)</small> this plugin will look for/intercept.", 'affint'),
     ]
   );
   add_settings_field(
@@ -137,7 +137,7 @@ function affint_settings_init() {
     [
       'label_for'         => 'affint_user_cookie_expiry',
       'class'             => 'affint_row',
-      'affint_field_description' => 'How long should we store their location? <small>(This is to save your servers bandwidth!)</small>',
+      'affint_field_description' => 'How many days should we store their geo-location as a cookie? <small>(This is to save your servers bandwidth!)</small>',
     ]
   );
 
@@ -152,7 +152,8 @@ function affint_settings_init() {
   register_setting('affint', 'affint_afftag_uk');
   register_setting('affint', 'affint_user_cookie_expiry');
 
-  // $wpa8185_WP_Aff_International->flush();
+  // Update rewrite rules
+  flush_rewrite_rules();
 }
 
 
@@ -251,6 +252,21 @@ function affint_options_page_html() {
       submit_button('Update Settings');
       ?>
     </form>
+
+    <br><br><br>
+
+    <div class="">
+      <h3>Need more flexibility and/or analytics data?</h3>
+
+      <p>Tell us <a href="https://clientcoffee.com/contact?utm_source=wpaff&utm_medium=amazon-intl&utm_campaign=plugin-options-footer" target="_blank">what you're looking for</a>, and we'll make it happen.
+    </div>
+
+    <div class="">
+      <h3>Want to increase your affiliate earnings?</h3>
+
+      <p>At <a href="https://clientcoffee.com/?utm_source=wpaff&utm_medium=amazon-intl&utm_campaign=plugin-options-footer" target="_blank">Client Coffee</a>, all we do is help small businesses make more money online.
+    </div>
+
   </div>
   <?php
 }

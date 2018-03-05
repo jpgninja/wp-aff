@@ -1,7 +1,7 @@
 <?php
 global $wp;
 
-define('DEBUG', true);
+define('DEBUG', false);
 // Test ASIN: B002RPCOH8
 
 // Instantiate vars
