@@ -1,15 +1,15 @@
 <?php
 
 /*
-Plugin Name: Affiliates International
-Plugin URI: http://affinternational.com
+Plugin Name: [ WP AFF ] Amazon Affiliates International
+Plugin URI: https://wpaff.com
 Description: Change outbound Amazon links to geo-located domain
 Author: Client Coffee
 Version: 0.2
-Author URI:
+Author URI: https://clientcoffee.com
 */
 
-class IntlAffiliate {
+class WP_Aff_International {
 
   /**
    * Instantiate variables
@@ -22,17 +22,18 @@ class IntlAffiliate {
    * Constructor
    *
    * Instantiate hooks
-   * 
+   *
    */
   public function __construct() {
     $this->plugin_path = plugin_dir_path(__FILE__);
 
     include $this->plugin_path . '_includes/admin_options.php';
-    
+
     // @TODO Make this dynamic.
     // @TODO When this changes, we must resave permalinks
+    // $this->url_slug = get_option('affint_slug');
     $this->url_slug = 'am';
-    
+
     register_activation_hook( __FILE__, array( $this, 'flush' ) );
     add_action( 'init', array( $this, 'init') );
     add_filter( 'query_vars', array( $this, 'query_vars') );
@@ -58,7 +59,7 @@ class IntlAffiliate {
     /**
      * Listen for outgoing Amazon ASIN links
      *
-     * @TODO: Merge this rule 
+     * @TODO: Merge this rule
      */
 
     // Custom tag
@@ -115,4 +116,4 @@ class IntlAffiliate {
 }
 
 
-$wpa8185_IntlAffiliate = new IntlAffiliate();
+$wpa8185_WP_Aff_International = new WP_Aff_International();
