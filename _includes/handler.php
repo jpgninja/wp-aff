@@ -29,7 +29,7 @@ if ($visitor_is_cached == true) {
 	}
 
   // if (DEBUG == 'true') {
-  //   $ip = '70.81.0.212';
+  //   $ip = '170.81.0.212';
   // }
 
   // You know what they say about cleanliness
